@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -20,11 +19,25 @@ public class ToyAdapter extends RecyclerView.Adapter<ToyAdapter.ToyViewHolder>{
     private Toys toys;
     private int single_layout;
 
-    public ToyAdapter(Context context , Toys toys , int single_layout)
+    public interface OnItemClickListener {
+        public void onItemClicked(Toy toy);
+    }
+
+    public interface OnItemLongClickListener {
+        public boolean onItemLongClicked(Toy toy);
+    }
+
+    private OnItemClickListener listener;
+    private OnItemLongClickListener longListener;
+
+    public ToyAdapter(Context context , Toys toys , int single_layout , OnItemClickListener listener
+    , OnItemLongClickListener longListener)
     {
         this.context = context;
         this.toys = toys;
         this.single_layout = single_layout;
+        this.listener = listener;
+        this.longListener = longListener;
     }
 
     @NonNull
@@ -38,7 +51,7 @@ public class ToyAdapter extends RecyclerView.Adapter<ToyAdapter.ToyViewHolder>{
     public void onBindViewHolder(@NonNull ToyViewHolder holder, int position) {
         Toy toy = toys.get(position);
         if(toy != null)
-            holder.bind(toy);
+            holder.bind(toy , listener , longListener);
     }
 
     @Override
@@ -60,9 +73,24 @@ public class ToyAdapter extends RecyclerView.Adapter<ToyAdapter.ToyViewHolder>{
             tvPrice = itemView.findViewById(R.id.tvPrice);
         }
 
-        public void bind(Toy toy){
+        public void bind(Toy toy , OnItemClickListener listener , OnItemLongClickListener longListener){
             tvName.setText(toy.getName());
             tvPrice.setText(String.valueOf(toy.getPrice()));
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    listener.onItemClicked(toy);
+                }
+            });
+
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    longListener.onItemLongClicked(toy);
+                    return true;
+                }
+            });
         }
     }
 }
