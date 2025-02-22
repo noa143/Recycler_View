@@ -8,13 +8,21 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
+
+import noa.mitzner.model.Categories;
 
 public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHolder> {
     private List<String> categoryList;
+    private View.OnClickListener listener;
+    private View.OnLongClickListener longClickListener;
 
-    public CategoryAdapter(List<String> categoryList) {
-        this.categoryList = categoryList;
+    public CategoryAdapter(CategoriesActivity categoriesActivity, List<String> categoryList,
+                           View.OnClickListener listener, View.OnLongClickListener longClickListener) {
+        this.categoryList = categoryList != null ? categoryList : new ArrayList<>();
+        this.listener = listener;
+        this.longClickListener = longClickListener;
     }
 
     @NonNull
@@ -26,7 +34,10 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.textView.setText(categoryList.get(position));
+        String category = categoryList.get(position);
+        holder.textView.setText(category);
+        holder.itemView.setOnClickListener(listener);
+        holder.itemView.setOnLongClickListener(longClickListener);
     }
 
     @Override
@@ -42,4 +53,15 @@ public class CategoryAdapter extends RecyclerView.Adapter<CategoryAdapter.ViewHo
             textView = itemView.findViewById(android.R.id.text1);
         }
     }
+
+    public void setCategories(Categories categories) {
+        if (categories != null) {
+            categoryList.clear();
+            for (int i = 0; i < categories.size(); i++) {
+                categoryList.add(categories.get(i).getName());
+            }
+            notifyDataSetChanged();
+        }
+    }
 }
+
