@@ -135,6 +135,7 @@ public class CategoriesActivity extends AppCompatActivity {
         if (!validate(categoryName.getName())) {
             return;
         }
+
         if (toyCategoryViewModel.exist(categoryName)) {
             Toast.makeText(this, "This category already exists", Toast.LENGTH_SHORT).show();
             return;
