@@ -136,12 +136,11 @@ public class CategoriesActivity extends AppCompatActivity {
             return;
         }
         if (toyCategoryViewModel.exist(categoryName)) {
-            Toast.makeText(this, "this category is already exist", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "This category already exists", Toast.LENGTH_SHORT).show();
             return;
         }
-
-        toyCategoryViewModel.addCategory(category);
-        Toast.makeText(this, "the category is added ", Toast.LENGTH_SHORT).show();
+        toyCategoryViewModel.addCategory(categoryName);
+        Toast.makeText(this, "The category has been added", Toast.LENGTH_SHORT).show();
         etCategoryName.setText("");
     }
 
